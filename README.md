@@ -10,7 +10,7 @@ La aplicación utiliza un enfoque reactivo en toda la pila, desde el controlador
 
 * **Arquitectura Hexagonal**: La estructura del proyecto está dividida en capas de dominio, aplicación e infraestructura para desacoplar las dependencias tecnológicas del núcleo de la lógica de negocio.
 * **Programación Reactiva**: Se utiliza **Spring Boot Webflux** y **Project Reactor** para la gestión de flujos de datos asíncronos y no bloqueantes.
-* **Persistencia de Datos**: La persistencia se implementa con **MySQL** utilizando **R2DBC** (Reactive Relational Database Connectivity). Esto permite que la capa de base de datos también sea reactiva.
+* **Persistencia de Datos**: La persistencia se implementa con **MySQL** utilizando **R2DBC** (Reactive Relational Database Connectivity). La base de datos está alojada en la nube usando **Aiven Cloud**, lo que permite que la capa de base de datos sea completamente reactiva y escalable.
 * **Pruebas Unitarias**: Se han incluido pruebas unitarias para la capa de servicio y de integración para la capa de controlador con una cobertura superior al 60%.
 * **Logging**: Se implementa un sistema de logging (`slf4j`) para el seguimiento del flujo de la aplicación.
 * **RESTful API**: La exposición de los endpoints se realiza siguiendo los principios de una API RESTful, utilizando métodos HTTP y rutas claras.
@@ -37,13 +37,22 @@ La arquitectura hexagonal se eligió para garantizar que la lógica de negocio, 
 
 La adopción de un enfoque reactivo con Webflux es ideal para escenarios donde se espera un alto volumen de solicitudes y la mayoría de las operaciones son de I/O (entrada/salida), como las interacciones con la base de datos. Esto maximiza la utilización de recursos y mejora el rendimiento bajo carga.
 
+## Infraestructura en la Nube
+
+* **Base de Datos**: MySQL alojada en **Aiven Cloud** con conexión reactiva R2DBC
+* **Escalabilidad**: La infraestructura en la nube permite escalamiento automático según la demanda
+* **Disponibilidad**: Base de datos con alta disponibilidad y respaldo automático
+
 ## Despliegue Local
 
-Para ejecutar la aplicación localmente, asegúrate de tener instalado Java 17+ y Maven.
+Para ejecutar la aplicación localmente, asegúrate de tener instalado Java 8+ y Maven.
 
 1.  **Clonar el repositorio:** `git clone <https://github.com/svelacai/prueba-franquicia.git>`
-2.  **Configurar MySQL**:
-    * Actualiza el archivo `src/main/resources/application.properties` con las credenciales de tu base de datos:
+2.  **Base de Datos en la Nube**:
+    * La aplicación está configurada para conectarse automáticamente a la base de datos MySQL en Aiven Cloud:
+    * **Host**: mysql-franquicia-santiago-4acf.b.aivencloud.com
+    * **Puerto**: 27518
+    * **Base de Datos**: defaultdb
      ```properties
         spring.application.name=prueba-franquicia
 

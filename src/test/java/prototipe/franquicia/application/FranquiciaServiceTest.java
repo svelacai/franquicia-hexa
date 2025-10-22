@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import prototipe.franquicia.domain.model.Franquicia;
+import prototipe.franquicia.domain.model.Producto;
 import prototipe.franquicia.domain.model.Sucursal;
 import prototipe.franquicia.domain.ports.FranquiciaRepositoryPort;
 import reactor.core.publisher.Mono;
@@ -29,6 +31,7 @@ public class FranquiciaServiceTest {
 
 	private Franquicia franquicia;
 	private Sucursal sucursal;
+	private Producto producto;
 
 	@BeforeEach
 	void setUp() {
@@ -40,6 +43,10 @@ public class FranquiciaServiceTest {
 		sucursal = new Sucursal();
 		sucursal.setNombre("Sucursal Test");
 		sucursal.setProductos(new ArrayList<>());
+
+		producto = new Producto();
+		producto.setNombre("Producto Test");
+		producto.setStock(10);
 	}
 
 	@Test
@@ -55,8 +62,75 @@ public class FranquiciaServiceTest {
 		when(franquiciaRepository.findById(1)).thenReturn(Mono.just(franquicia));
 		when(franquiciaRepository.save(any(Franquicia.class))).thenReturn(Mono.just(franquicia));
 
-		StepVerifier.create(franquiciaService.agregarSucursal(1, sucursal)).expectNextMatches(
-				f -> f.getSucursales().size() == 1 && f.getSucursales().get(0).getNombre().equals("Sucursal Test"))
+		StepVerifier.create(franquiciaService.agregarSucursal(1, sucursal))
+				.expectNextMatches(f -> f.getSucursales().size() == 1 && f.getSucursales().get(0).getNombre().equals("Sucursal Test"))
+				.verifyComplete();
+	}
+
+	@Test
+	void testAgregarProducto() {
+		franquicia.setSucursales(Arrays.asList(sucursal));
+		when(franquiciaRepository.findById(1)).thenReturn(Mono.just(franquicia));
+		when(franquiciaRepository.save(any(Franquicia.class))).thenReturn(Mono.just(franquicia));
+
+		StepVerifier.create(franquiciaService.agregarProducto(1, "Sucursal Test", producto))
+				.expectNextMatches(f -> f.getSucursales().get(0).getProductos().size() == 1)
+				.verifyComplete();
+	}
+
+	@Test
+	void testModificarStockProducto() {
+		sucursal.setProductos(Arrays.asList(producto));
+		franquicia.setSucursales(Arrays.asList(sucursal));
+		when(franquiciaRepository.findById(1)).thenReturn(Mono.just(franquicia));
+		when(franquiciaRepository.save(any(Franquicia.class))).thenReturn(Mono.just(franquicia));
+
+		StepVerifier.create(franquiciaService.modificarStockProducto(1, "Sucursal Test", "Producto Test", 20))
+				.expectNextMatches(f -> f.getSucursales().get(0).getProductos().get(0).getStock() == 20)
+				.verifyComplete();
+	}
+
+	@Test
+	void testEliminarProducto() {
+		sucursal.setProductos(new ArrayList<>(Arrays.asList(producto)));
+		franquicia.setSucursales(Arrays.asList(sucursal));
+		when(franquiciaRepository.findById(1)).thenReturn(Mono.just(franquicia));
+		when(franquiciaRepository.save(any(Franquicia.class))).thenReturn(Mono.just(franquicia));
+
+		StepVerifier.create(franquiciaService.eliminarProducto(1, "Sucursal Test", "Producto Test"))
+				.expectNextMatches(f -> f.getSucursales().get(0).getProductos().isEmpty())
+				.verifyComplete();
+	}
+
+	@Test
+	void testActualizarNombreFranquicia() {
+		when(franquiciaRepository.findById(1)).thenReturn(Mono.just(franquicia));
+		when(franquiciaRepository.save(any(Franquicia.class))).thenReturn(Mono.just(franquicia));
+
+		StepVerifier.create(franquiciaService.actualizarNombreFranquicia(1, "Nuevo Nombre"))
+				.expectNextMatches(f -> f.getNombre().equals("Nuevo Nombre"))
+				.verifyComplete();
+	}
+
+	@Test
+	void testGetProductoConMasStockPorSucursal() {
+		Producto producto2 = new Producto();
+		producto2.setNombre("Producto 2");
+		producto2.setStock(5);
+		sucursal.setProductos(Arrays.asList(producto, producto2));
+		franquicia.setSucursales(Arrays.asList(sucursal));
+		when(franquiciaRepository.findById(1)).thenReturn(Mono.just(franquicia));
+
+		StepVerifier.create(franquiciaService.getProductoConMasStockPorSucursal(1))
+				.expectNextCount(1)
+				.verifyComplete();
+	}
+
+	@Test
+	void testFranquiciaNoEncontrada() {
+		when(franquiciaRepository.findById(999)).thenReturn(Mono.empty());
+
+		StepVerifier.create(franquiciaService.agregarSucursal(999, sucursal))
 				.verifyComplete();
 	}
 }
