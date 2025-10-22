@@ -14,6 +14,7 @@ La aplicación utiliza un enfoque reactivo en toda la pila, desde el controlador
 * **Pruebas Unitarias**: Se han incluido pruebas unitarias para la capa de servicio y de integración para la capa de controlador con una cobertura superior al 60%.
 * **Logging**: Se implementa un sistema de logging (`slf4j`) para el seguimiento del flujo de la aplicación.
 * **RESTful API**: La exposición de los endpoints se realiza siguiendo los principios de una API RESTful, utilizando métodos HTTP y rutas claras.
+* **Documentación API**: Se incluye documentación automática con **Swagger/OpenAPI** accesible en `/swagger-ui.html`.
 
 ## Mensajería (Endpoints)
 
@@ -69,3 +70,7 @@ Para ejecutar la aplicación localmente, asegúrate de tener instalado Java 8+ y
 
 
 La aplicación se iniciará en `http://localhost:8080`.
+
+3. **Acceder a la documentación de la API**:
+   * **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+   * **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
