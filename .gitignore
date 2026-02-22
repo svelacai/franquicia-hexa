@@ -1,0 +1,23 @@
+# Ignorar archivos de configuraci�n sensibles
+#*.properties
+#*.yml
+
+# Archivos de sistema
+*.log
+*.tmp
+
+# Archivos de compilaci�n (Java / Spring Boot)
+target/
+build/
+out/
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/terraform.tfvars
+terraform/.terraform.lock.hcl
+
+# Docker
+.env
+*.env.local

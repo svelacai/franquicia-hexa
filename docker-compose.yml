@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  franquicia-api:
+    build: .
+    container_name: franquicia-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_R2DBC_URL=r2dbc:mysql://mysql-franquicia-santiago-4acf.b.aivencloud.com:27518/defaultdb
+      - SPRING_R2DBC_USERNAME=avnadmin
+      - SPRING_R2DBC_PASSWORD=AVNS_trd2DWx_sOlG0xbcMDi
+    restart: unless-stopped
+    networks:
+      - franquicia-network
+
+networks:
+  franquicia-network:
+    driver: bridge

@@ -1,0 +1,4 @@
+# Copiar este archivo a terraform.tfvars y completar con tus valores
+aiven_api_token      = "YOUR_AIVEN_API_TOKEN"
+aiven_project_name   = "franquicia-project"
+environment          = "dev"

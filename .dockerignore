@@ -1,0 +1,12 @@
+target/
+.mvn/
+.settings/
+logs/
+*.log
+.classpath
+.project
+.factorypath
+.gitignore
+.gitattributes
+README.md
+HELP.md
